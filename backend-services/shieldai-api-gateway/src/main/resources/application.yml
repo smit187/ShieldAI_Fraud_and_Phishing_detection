@@ -1,0 +1,89 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: shieldai-api-gateway
+
+  cloud:
+    gateway:
+      # Global CORS configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:3000
+              - http://localhost:5173
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            exposedHeaders:
+              - Authorization
+            allowCredentials: true
+            maxAge: 3600
+
+      # Route definitions
+      routes:
+        # User Service routes
+        - id: user-service-auth
+          uri: lb://shieldai-user-service
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: user-service-users
+          uri: lb://shieldai-user-service
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: user-service-devices
+          uri: lb://shieldai-user-service
+          predicates:
+            - Path=/api/v1/devices/**
+
+        # Scan Service routes
+        - id: scan-service
+          uri: lb://shieldai-scan-service
+          predicates:
+            - Path=/api/v1/scan/**
+
+        - id: scan-service-reports
+          uri: lb://shieldai-scan-service
+          predicates:
+            - Path=/api/v1/reports/**
+
+        - id: scan-service-history
+          uri: lb://shieldai-scan-service
+          predicates:
+            - Path=/api/v1/history/**
+
+      # Default filters applied to all routes
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+# Eureka Client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+# Logging
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.shieldai: DEBUG

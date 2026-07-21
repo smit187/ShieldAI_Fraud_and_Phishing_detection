@@ -1,0 +1,5 @@
+rootProject.name = 'shieldai-backend'
+include 'shieldai-api-gateway'
+include 'shieldai-discovery-server'
+include 'shieldai-user-service'
+include 'shieldai-scan-service'

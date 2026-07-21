@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShieldAI - Enterprise Security & Threat Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <i data-lucide="shield-alert" class="glow-icon"></i>
+                </div>
+                <div class="logo-text">
+                    <h2>Shield<span>AI</span></h2>
+                    <span class="logo-subtext">Enterprise Security</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="shield"></i>
+                    <span>Threat Engine</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="activity"></i>
+                    <span>System Status</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configuration</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                        <span class="user-role">SecOps Lead</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Security Operations Dashboard</h1>
+                    <p class="header-subtitle">Real-time fraud & phishing monitoring across all active channels</p>
+                </div>
+                <div class="header-controls">
+                    <div class="system-status-indicator">
+                        <span class="status-dot online"></span>
+                        <span class="status-text">All Systems Nominal</span>
+                    </div>
+                    <button class="btn btn-primary" id="btnSimulate">
+                        <i data-lucide="zap"></i>
+                        <span>Simulate Threat</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Metrics Grid -->
+            <section class="metrics-grid">
+                <div class="metric-card glass">
+                    <div class="metric-header">
+                        <span class="metric-title">Total Scans (24h)</span>
+                        <div class="metric-icon bg-blue-dim">
+                            <i data-lucide="eye" class="text-blue"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h3 id="metricTotalScans">1,248,390</h3>
+                        <span class="metric-trend positive">
+                            <i data-lucide="trending-up"></i> +12.4%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass">
+                    <div class="metric-header">
+                        <span class="metric-title">Threats Blocked</span>
+                        <div class="metric-icon bg-red-dim">
+                            <i data-lucide="shield-check" class="text-red"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h3 id="metricThreatsBlocked">14,832</h3>
+                        <span class="metric-trend positive">
+                            <i data-lucide="trending-up"></i> +8.2%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass">
+                    <div class="metric-header">
+                        <span class="metric-title">Inference Latency</span>
+                        <div class="metric-icon bg-yellow-dim">
+                            <i data-lucide="zap-off" class="text-yellow"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h3 id="metricLatency">42.8 ms</h3>
+                        <span class="metric-trend positive">
+                            <i data-lucide="trending-down"></i> -3.1ms
+                        </span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass">
+                    <div class="metric-header">
+                        <span class="metric-title">Detection Accuracy</span>
+                        <div class="metric-icon bg-green-dim">
+                            <i data-lucide="check-circle" class="text-green"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h3 id="metricAccuracy">99.85%</h3>
+                        <span class="metric-trend neutral">
+                            <i data-lucide="minus"></i> Stable
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Split Layout -->
+            <div class="dashboard-split">
+                <!-- Left Panel: Live Scan logs -->
+                <section class="split-left glass">
+                    <div class="section-header">
+                        <div class="section-title-group">
+                            <i data-lucide="activity"></i>
+                            <h2>Live Scan Stream</h2>
+                        </div>
+                        <div class="filter-group">
+                            <div class="search-box">
+                                <i data-lucide="search"></i>
+                                <input type="text" id="searchInput" placeholder="Search suspicious contents...">
+                            </div>
+                            <select id="channelFilter" class="filter-select">
+                                <option value="all">All Channels</option>
+                                <option value="sms">SMS</option>
+                                <option value="email">Email</option>
+                                <option value="url">URL</option>
+                                <option value="qr">QR Code</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="scan-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Channel</th>
+                                    <th>Content Snippet</th>
+                                    <th>Risk Score</th>
+                                    <th>Classification</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scanLogBody">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Right Panel: Microservices Status & Simulator Config -->
+                <section class="split-right">
+                    <!-- Microservices Health -->
+                    <div class="services-card glass">
+                        <div class="section-header">
+                            <div class="section-title-group">
+                                <i data-lucide="server"></i>
+                                <h2>Service Orchestration</h2>
+                            </div>
+                        </div>
+                        <div class="services-list">
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">Discovery Server</span>
+                                    <span class="service-url">Eureka : 8761</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">API Gateway</span>
+                                    <span class="service-url">Spring Cloud Gateway : 8080</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">User Service</span>
+                                    <span class="service-url">Spring Boot : 8081</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">Scan Service</span>
+                                    <span class="service-url">Spring Boot : 8082</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">AI Engine (FastAPI)</span>
+                                    <span class="service-url">Uvicorn : 8000</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-meta">
+                                    <span class="service-name">Database Broker</span>
+                                    <span class="service-url">PostgreSQL / Kafka / Redis</span>
+                                </div>
+                                <span class="status-badge status-ok">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat simulation config -->
+                    <div class="simulator-card glass">
+                        <div class="section-header">
+                            <div class="section-title-group">
+                                <i data-lucide="terminal"></i>
+                                <h2>Interactive Simulator</h2>
+                            </div>
+                        </div>
+                        <div class="sim-form">
+                            <div class="form-group">
+                                <label for="simChannel">Simulation Channel</label>
+                                <select id="simChannel" class="form-control">
+                                    <option value="sms">SMS Message</option>
+                                    <option value="email">Email Body</option>
+                                    <option value="url">Phishing URL</option>
+                                    <option value="qr">QR Code Payload</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="simContent">Threat Content / Payload</label>
+                                <textarea id="simContent" rows="3" class="form-control" placeholder="Enter text to analyze..."></textarea>
+                            </div>
+                            <div class="sim-presets">
+                                <button class="btn btn-outline btn-xs" onclick="setPreset('sms_bank')">Bank Scam SMS</button>
+                                <button class="btn btn-outline btn-xs" onclick="setPreset('url_phish')">Phishing Link</button>
+                                <button class="btn btn-outline btn-xs" onclick="setPreset('safe_text')">Safe Text</button>
+                            </div>
+                            <button class="btn btn-accent btn-full" id="btnAnalyzeSim">
+                                <i data-lucide="shield-alert"></i>
+                                <span>Scan & Propagate</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scan Detail Modal Drawer -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3>Scan Threat Analysis Report</h3>
+                <button class="modal-close" id="modalClose"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="threat-assessment-header">
+                    <div class="risk-meter-container">
+                        <div class="risk-gauge">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" class="gauge-bg" />
+                                <circle cx="50" cy="50" r="45" class="gauge-fill" id="modalRiskGauge" stroke-dasharray="283" stroke-dashoffset="283" />
+                            </svg>
+                            <div class="gauge-text">
+                                <span id="modalRiskValue">0</span>
+                                <label>Risk</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="threat-meta">
+                        <div class="meta-row">
+                            <span class="label">Status:</span>
+                            <span id="modalClassification" class="badge">SAFE</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="label">Source Channel:</span>
+                            <span id="modalChannel" class="val-bold">SMS</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="label">Engine Version:</span>
+                            <span>v1.0.0-distilbert</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="modal-divider">
+
+                <div class="modal-section">
+                    <h4>Scanned Content</h4>
+                    <pre class="content-box" id="modalContent">Content text goes here...</pre>
+                </div>
+
+                <div class="modal-section">
+                    <h4>AI Verdict & Explanations</h4>
+                    <p class="explanation-box" id="modalExplanation">Explanation goes here...</p>
+                </div>
+
+                <div class="modal-section">
+                    <h4>Threat Indicators</h4>
+                    <ul class="indicators-list" id="modalIndicators">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

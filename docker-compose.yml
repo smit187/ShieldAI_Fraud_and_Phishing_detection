@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: shieldai_postgres
+    environment:
+      POSTGRES_USER: shieldai
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: shieldai_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend-services/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shieldai -d shieldai_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ============================================
+  # Redis (Session Cache, Rate Limiting)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: shieldai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ============================================
+  # Zookeeper (Kafka dependency)
+  # ============================================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: shieldai_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+
+  # ============================================
+  # Apache Kafka (Event Streaming)
+  # ============================================
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: shieldai_kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 168
+    restart: unless-stopped
+
+  # ============================================
+  # AI Engine (Python FastAPI)
+  # ============================================
+  ai-engine:
+    build:
+      context: ./ai-models
+      dockerfile: Dockerfile
+    container_name: shieldai_ai_engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
