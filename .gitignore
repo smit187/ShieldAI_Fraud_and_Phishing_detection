@@ -23,3 +23,9 @@ venv/
 # Environment files
 .env
 .env.*
+
+# ShieldAI Data & Models
+data/
+!data/.gitkeep
+*.h5
+*.keras
